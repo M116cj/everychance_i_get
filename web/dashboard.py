@@ -8,11 +8,33 @@ app.config['SECRET_KEY'] = 'trading-bot-secret'
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 trader_instance: Optional[Any] = None
+trader_initializing = True
+initialization_error: Optional[str] = None
 
-def create_app(trader):
+def create_app(trader=None):
     global trader_instance
-    trader_instance = trader
+    if trader is not None:
+        trader_instance = trader
     return app, socketio
+
+def set_trader(trader):
+    global trader_instance, trader_initializing
+    trader_instance = trader
+    trader_initializing = False
+
+def set_initialization_error(error):
+    global initialization_error, trader_initializing
+    initialization_error = str(error)
+    trader_initializing = False
+
+@app.route('/health')
+def health_check():
+    return jsonify({
+        'status': 'healthy',
+        'service': 'trading-bot',
+        'trader_ready': trader_instance is not None,
+        'initializing': trader_initializing
+    }), 200
 
 @app.route('/')
 def index():
@@ -23,6 +45,16 @@ def get_status():
     if trader_instance:
         status = trader_instance.get_status()
         return jsonify(status)
+    elif trader_initializing:
+        return jsonify({
+            'status': 'initializing',
+            'message': 'Trading system is starting up...'
+        }), 200
+    elif initialization_error:
+        return jsonify({
+            'status': 'error',
+            'error': initialization_error
+        }), 500
     return jsonify({'error': 'Trader not initialized'}), 500
 
 @app.route('/api/trades')
@@ -46,6 +78,8 @@ def get_trades():
                 'created_at': trade.created_at.isoformat()
             })
         return jsonify(trade_list)
+    elif trader_initializing:
+        return jsonify([]), 200
     return jsonify({'error': 'Trader not initialized'}), 500
 
 @app.route('/api/performance')
@@ -54,6 +88,12 @@ def get_performance():
         trades = trader_instance.db_manager.get_trades(limit=500)
         score = trader_instance.scoring_engine.score_trading_performance(trades)
         return jsonify(score)
+    elif trader_initializing:
+        return jsonify({
+            'total_score': 0,
+            'rating': 'Initializing',
+            'component_scores': {}
+        }), 200
     return jsonify({'error': 'Trader not initialized'}), 500
 
 @socketio.on('connect')
