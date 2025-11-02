@@ -1,7 +1,7 @@
 from flask import Flask, render_template, jsonify
 from flask_socketio import SocketIO
 import asyncio
-from typing import Optional
+from typing import Optional, Any
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'trading-bot-secret'
@@ -63,5 +63,3 @@ def handle_connect():
 @socketio.on('disconnect')
 def handle_disconnect():
     print('Client disconnected')
-
-from typing import Any
