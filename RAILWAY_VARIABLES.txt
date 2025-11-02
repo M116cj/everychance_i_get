@@ -1,0 +1,120 @@
+# ============================================
+# Railway 環境變量配置
+# ============================================
+# 複製以下內容到 Railway 的 RAW Editor
+# ============================================
+
+# 系統配置
+ENVIRONMENT=production
+LOG_LEVEL=INFO
+DATA_PATH=/app/data
+MODELS_PATH=/app/models
+
+# Binance API 配置（如需實盤交易請填入）
+BINANCE_API_KEY=
+BINANCE_API_SECRET=
+BINANCE_TESTNET=False
+
+# 交易配置
+TRADING_ENABLED=False
+PAPER_TRADING=True
+MAX_CONCURRENT_POSITIONS=5
+MAX_LEVERAGE=125
+DAILY_LOSS_LIMIT=0.05
+MAX_DRAWDOWN=0.10
+
+# ============================================
+# 注意事項：
+# ============================================
+# 1. PORT 變量由 Railway 自動提供，無需設置
+# 2. 首次部署建議使用模擬交易模式測試
+# 3. 實盤交易前必須填入真實的 BINANCE_API_KEY 和 BINANCE_API_SECRET
+# 4. 記得在 Railway 添加 Volumes 保存數據：
+#    - Mount Path: /app/data (1GB)
+#    - Mount Path: /app/models (1GB)
+# ============================================
+
+# ============================================
+# 環境變量說明
+# ============================================
+
+# ENVIRONMENT
+# 環境類型：development（開發）或 production（生產）
+# 建議值：production
+
+# LOG_LEVEL
+# 日誌級別：DEBUG, INFO, WARNING, ERROR
+# 建議值：INFO
+
+# DATA_PATH
+# 數據庫存儲路徑
+# 生產環境建議：/app/data
+
+# MODELS_PATH
+# 機器學習模型存儲路徑
+# 生產環境建議：/app/models
+
+# BINANCE_API_KEY
+# Binance API 密鑰
+# 模擬交易可留空，實盤交易必填
+
+# BINANCE_API_SECRET
+# Binance API 秘密
+# 模擬交易可留空，實盤交易必填
+
+# BINANCE_TESTNET
+# 是否使用 Binance 測試網
+# True=測試網, False=主網
+# 建議先用測試網驗證
+
+# TRADING_ENABLED
+# 是否啟用真實交易
+# False=完全模擬, True=啟用交易
+# 建議先設為 False 測試系統
+
+# PAPER_TRADING
+# 是否使用模擬交易模式
+# True=模擬, False=實盤
+# 與 TRADING_ENABLED 配合使用
+
+# MAX_CONCURRENT_POSITIONS
+# 最大並發持倉數量
+# 建議值：3-10
+
+# MAX_LEVERAGE
+# 最大槓桿倍數（冷啟動期會自動限制為3倍）
+# 建議值：50-125
+
+# DAILY_LOSS_LIMIT
+# 每日最大損失限額（百分比）
+# 建議值：0.05 (5%)
+
+# MAX_DRAWDOWN
+# 最大回撤限制（百分比）
+# 建議值：0.10 (10%)
+
+# ============================================
+# 部署模式配置參考
+# ============================================
+
+# 【模式1：完全模擬測試】
+# TRADING_ENABLED=False
+# PAPER_TRADING=True
+# BINANCE_API_KEY=（留空）
+# BINANCE_API_SECRET=（留空）
+
+# 【模式2：測試網交易】
+# TRADING_ENABLED=True
+# PAPER_TRADING=False
+# BINANCE_TESTNET=True
+# BINANCE_API_KEY=（測試網密鑰）
+# BINANCE_API_SECRET=（測試網秘密）
+
+# 【模式3：實盤交易】（充分測試後）
+# TRADING_ENABLED=True
+# PAPER_TRADING=False
+# BINANCE_TESTNET=False
+# BINANCE_API_KEY=（真實密鑰）
+# BINANCE_API_SECRET=（真實秘密）
+
+# ============================================

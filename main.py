@@ -1,6 +1,7 @@
 import asyncio
 import signal
 import sys
+import os
 from threading import Thread
 
 from trading.trader import SelfLearningTrader
@@ -32,13 +33,15 @@ async def main():
         
         app, socketio = create_app(trader)
         
+        port = int(os.getenv('PORT', 5000))
+        
         def run_flask():
-            socketio.run(app, host='0.0.0.0', port=5000, debug=False, use_reloader=False)
+            socketio.run(app, host='0.0.0.0', port=port, debug=False, use_reloader=False)
         
         flask_thread = Thread(target=run_flask, daemon=True)
         flask_thread.start()
         
-        logger.info("web_dashboard_started", url="http://0.0.0.0:5000")
+        logger.info("web_dashboard_started", url=f"http://0.0.0.0:{port}")
         
         await shutdown_event.wait()
         
