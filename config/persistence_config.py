@@ -1,0 +1,16 @@
+PERSISTENCE_CONFIG = {
+    "DATABASE_URL": "sqlite:///data/trading_system.db",
+    "BACKUP_INTERVAL": 3600,
+    "MAX_BACKUP_AGE": 7,
+    
+    "MAX_TRADE_RECORDS": 10000,
+    "MAX_FEATURE_SNAPSHOTS": 50000,
+    "CLEANUP_INTERVAL": 3600,
+    
+    "CACHE_TTL": 300,
+    "MAX_CACHE_SIZE": 1000,
+    
+    "AUTO_RECOVERY": True,
+    "RECOVERY_TIMEOUT": 30,
+    "STATE_SAVE_INTERVAL": 60,
+}
